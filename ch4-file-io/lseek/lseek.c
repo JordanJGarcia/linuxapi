@@ -28,7 +28,7 @@ main(int argc, char * argv[])
     char buf[20] = "";
 
     // open the file
-    fd = open(OUTFILE, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+    fd = open(OUTFILE, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
     if (fd == -1)
         errExit("open");
 
