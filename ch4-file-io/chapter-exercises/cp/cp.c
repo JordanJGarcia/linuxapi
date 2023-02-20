@@ -69,7 +69,6 @@ main(int argc, char * argv[])
         }
         else
             copy(argv[i], argv[argc - 1]);
-
     }
 
     exit(EXIT_SUCCESS);
