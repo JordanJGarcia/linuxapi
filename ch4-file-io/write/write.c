@@ -8,10 +8,10 @@
 int
 main(int argc, char * argv[])
 {
-    char buffer[BUF_SIZE + 1];
-    ssize_t numRead;
-    char * outFile = "what-you-wrote.txt";
     int fd;
+    ssize_t numRead;
+    char buffer[BUF_SIZE + 1];
+    char * outFile = "what-you-wrote.txt";
     mode_t filePerms = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH; //rw-r--r--
 
     printf("Welcome!\nYou may type anything you wish to be printed to the file \"%s\"\n", outFile);
@@ -31,7 +31,7 @@ main(int argc, char * argv[])
 
         // check for exit
         // user should enter <return> after typing exit (or any line)
-        // so include newline in this
+        // so include newline in this check
         if (strcmp(buffer, "exit\n") == 0)
             break;
 
