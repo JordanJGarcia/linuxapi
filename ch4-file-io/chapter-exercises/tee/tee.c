@@ -1,3 +1,13 @@
+/* 
+ * Problem 4-1:
+ *
+ * Implement tee using I/O system calls. By Default, tee overwrites
+ * any existing file with the given name. Implement the -a command-line
+ * option (tee -a file), which causes tee to append text to the end of
+ * a file if it already exists.
+ *
+*/
+
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "../../../lib/tlpi-hdr.h"
