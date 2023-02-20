@@ -77,7 +77,8 @@ main(int argc, char * argv[])
 
 
 // functions
-int copy(char * inputPath, char * outputPath)
+int
+copy(char * inputPath, char * outputPath)
 {
     int inFd, outFd;
     ssize_t numRead, numWritten;
