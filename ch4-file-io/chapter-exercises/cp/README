@@ -1,0 +1,3 @@
+Use the following command to create a file with holes:
+
+"../../chapter-examples/read-write-lseek/seek-io test-file s100000 wSomething"
