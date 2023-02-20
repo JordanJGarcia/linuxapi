@@ -1,0 +1,4 @@
+Example calls:
+
+./seek-io tfile s100000 wabc
+./seek-io tfile s10000 R5
