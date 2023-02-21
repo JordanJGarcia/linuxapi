@@ -41,6 +41,7 @@ main(int argc, char * argv[])
     printf("to single bits in the open file status flags.\n");
     printf("\nTherefore, to make this check, we mask the flags value with the constant O_ACCMODE\n");
     printf("and then test for equality with one of the constants:\n\n");
+    printf("accessMode = flags & O_ACCMODE;\n");
 
     accessMode = flags & O_ACCMODE;
 
@@ -61,6 +62,33 @@ main(int argc, char * argv[])
         printf("accessMode & O_RDONLY: PASS\n");
     else
         printf("accessMode & O_RDONLY: FAIL\n");
+
+    // set the flags
+    printf("\nWe can use FCNTL(2) to set some flags on an open file descriptor\n");
+    printf("The flags we can set are O_APPEND, O_NONBLOCK, O_NOATIME, O_ASYNC, and O_DIRECT\n");
+    printf("Attempts to modify other flags are ignored\n\n");
+
+    if (flags & O_APPEND)
+        printf("flags & O_APPEND: PASS\n");
+    else
+        printf("flags & O_APPEND: FAIL\n");
+
+    printf("\nSetting O_APPEND flag (flags |= O_APPEND):\n");
+    flags |= O_APPEND;
+    printf("Use FCNTL(2) to set them on the file descriptor\n");
+    printf("fcntl(fd, F_SETFL, flags)\n\n");
+
+    // set on file descriptor
+    if (fcntl(fd, F_SETFL, flags) == -1)
+        errExit("fcntl");
+
+    // re-retrieve flags from file descriptor
+    flags = fcntl(fd, F_GETFL);
+
+    if (flags & O_APPEND)
+        printf("flags & O_APPEND: PASS\n");
+    else
+        printf("flags & O_APPEND: FAIL\n");
 
     // close file
     if (close(fd) == -1)
