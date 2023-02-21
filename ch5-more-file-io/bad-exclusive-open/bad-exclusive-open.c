@@ -13,6 +13,8 @@ main(int argc, char * argv[])
     printf("This could happen if the kernel scheduler cut this process's time slice to give control\n");
     printf("to another process, both executing the code in this file.\n\n");
     printf("While this is rare, it is still possible; rendering this code unreliable in some way :(\n\n");
+    printf("To prevent this condition, and exclusively create the file with atomicity; you must\n");
+    printf("specify the O_CREAT | O_EXCL flags together in the call to OPEN(2)\n\n");
 
     int fd;
 
