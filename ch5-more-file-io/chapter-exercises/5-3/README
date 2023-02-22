@@ -13,11 +13,11 @@ should perform an lseek(fd, 0, SEEK_END) call before each write().
 Run two instances of this program at the same time without the x argument to write 1
 million bytes to the same file:
 
-* $ atomic-append f1 1000000 & atomic-append f1 1000000 *
+* $ ./atomic-append f1 1000000 & ./atomic-append f1 1000000 *
 
 Repeat the same steps, writing to a different file, but this time specifying the x argument:
 
-* $ atomic-append f2 1000000 x & atomic-append f2 1000000 x *
+* $ ./atomic-append f2 1000000 x & ./atomic-append f2 1000000 x *
 
 List the sizes of the files f1 and f2 using `ls -l` and explain the difference.
 
