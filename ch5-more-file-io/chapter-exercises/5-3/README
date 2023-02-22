@@ -1,0 +1,34 @@
+Problem:
+
+This exercise is designed to demonstrate why the atomicity guaranteed by opening a file with
+the O_APPEND flag is necessary. Write a program that takes up to 3 command-line arguments.
+
+* $ atomic-append filename num-bytes [x] *
+
+This program should open the specified filename (creating it if necessary) and append
+<num-bytes> bytes to the file by using write() to write a byte at a time. By default,
+the program should open the file with the O_APPEND flag, but if a third command-line
+argment (x) is supplied, then the O_APPEND flag should be ommited and instead the program
+should perform an lseek(fd, 0, SEEK_END) call before each write().
+Run two instances of this program at the same time without the x argument to write 1
+million bytes to the same file:
+
+* $ atomic-append f1 1000000 & atomic-append f1 1000000 *
+
+Repeat the same steps, writing to a different file, but this time specifying the x argument:
+
+* $ atomic-append f2 1000000 x & atomic-append f2 1000000 x *
+
+List the sizes of the files f1 and f2 using `ls -l` and explain the difference.
+
+
+Answer:
+
+The file created with the O_APPEND flag is exactly 2,000,000 bytes in size as expected.
+The file created using lseek(fd, 0, SEEK_END) is less than 2,000,000 bytes in size.
+
+This is happening because of a race condition.
+If the first process executing the code is interrupted between the lseek() and write()
+calls by a second process doing the same thing, then both processes will set their file
+offset to the same location before writing, and when the first process is rescheduled,
+it will overwrite the data already written by the second process.
