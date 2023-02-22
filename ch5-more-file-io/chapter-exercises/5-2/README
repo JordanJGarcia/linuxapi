@@ -1,0 +1,16 @@
+Problem:
+
+Write a program that opens an existing file for writing with the O_APPEND flag, and then seeks
+to the beginning of the file before writing some data. Where does the data appear in the file?
+Why?
+
+Answer:
+
+The data goes to the end of the file no matter what.
+Note the man page entry for O_APPEND flag:
+
+O_APPEND
+    The file is opened in append mode.  Before each write(2), 
+    the file offset is positioned at the end of the file, as if with lseek(2).  
+    The modification of  the  fileoffset and the write operation are performed 
+    as a single atomic step.
