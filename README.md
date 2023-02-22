@@ -15,3 +15,6 @@ Book:
 
 Source code from the book:
     https://www.man7.org/tlpi/code/
+
+The Open Group - Single Unix Specification V3:
+    https://publications.opengroup.org/standards/unix/single-unix-specification/t041
