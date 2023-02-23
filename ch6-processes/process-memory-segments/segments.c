@@ -3,6 +3,8 @@
 // unitialized data segment
 // remember, system initializes all memory in this segment to 0's
 char globBuf[65536];
+
+// initialized data segment
 int primes[] = { 2, 3, 5, 7 };
 
 // static function
