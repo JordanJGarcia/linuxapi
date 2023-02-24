@@ -1,0 +1,11 @@
+Problem:
+
+Implement SETENV() and UNSETENV() using GETENV(), PUTENV() and, where necessary,
+code that directly modifies environ. Your version of UNSETENV() should check to see
+whether there are multiple definitions of an environment variable, and remove them
+all (which is what the glibc version of UNSETENV() does).
+
+NOTE:
+
+I have no idea how there can possibly be multiple defintions of an environment
+variable. So I didn't do that check in the code. Sorry
