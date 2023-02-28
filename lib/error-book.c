@@ -35,7 +35,7 @@ outputError(Boolean useErr, int err, Boolean flushStdout,
         const char * format, va_list ap)
 {
 #define BUF_SIZE 500
-    char buf[1024], userMsg[BUF_SIZE], errText[BUF_SIZE];
+    char buf[1024], userMsg[BUF_SIZE], errText[BUF_SIZE] = "";
 
     // place user (formatted) message into buffer
     vsnprintf(userMsg, BUF_SIZE, format, ap);
