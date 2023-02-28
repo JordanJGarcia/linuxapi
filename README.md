@@ -4,7 +4,7 @@ This is a repo containg various programs I copied from reading through
 "The Linux Programming Interface" by Michael Kerrisk.
 
 There are also some programs I either added to or completely wrote myself,
-nonetheless the are free for you to use how you'd like... if you ever find
+nonetheless they are free for you to review/use how you'd like... if you ever find
 this repo :)
 
 
