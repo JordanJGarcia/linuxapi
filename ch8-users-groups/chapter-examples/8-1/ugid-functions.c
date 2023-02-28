@@ -1,6 +1,9 @@
 #include <pwd.h>
 #include <grp.h>
 #include <ctype.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
 #include "ugid-functions.h"
 
 char *
