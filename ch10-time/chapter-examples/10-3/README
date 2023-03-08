@@ -1,0 +1,14 @@
+Demonstrates the use of strptime() and strftime().
+
+This program takes a command-line argument containing a date and time,
+converts this to a broken-down time using strptime(), and then displays
+the result of performing the reverse conversion using strftime()
+
+The program takes up to 3 arguments, of which the first 2 are required.
+    arg1: string containing a date and time
+    arg2: format specification to be used by strptime()
+    arg3: format string to be used by strftime() for the reverse conversion (a default string is used if this arg is omitted)
+
+Example runs:
+    ./strtime "9:39:46pm 1 Feb 2011" "%I:%M:%S%p %d %b %Y"
+    ./strtime "9:39:46pm 1 Feb 2011" "%I:%M:%S%p %d %b %Y" "%F %T"
