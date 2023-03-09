@@ -31,9 +31,9 @@ displayProcessTimes(const char * msg)
     if (times(&t) == -1)
         errExit("times");
 
-    printf("\ttimes() yeilds: user CPU=%.2f; system CPU: %.2f\n",
-            (double) t.tms_utime / clockTicks,
-            (double) t.tms_stime / clockTicks);
+    printf("\ttimes() yeilds: user CPU=%ld,%.2f; system CPU=%ld,%.2f\n",
+            (long)t.tms_utime, (double) t.tms_utime / clockTicks,
+            (long)t.tms_stime, (double) t.tms_stime / clockTicks);
 }
 
 int
