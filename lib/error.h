@@ -9,22 +9,6 @@
 #include <stdarg.h> /* uh.... */
 #include <errno.h>  /* errno and error constants */
 
-/* macros */
-#ifndef TRUE
-#define TRUE 1
-#endif
-
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-#ifdef __GNUC__                                 // This stops 'gcc -Wall' from complaining that
-#define NORETURN __attribute__ ((__noreturn__)) // "control reaches end of non-void function"
-#else
-#define NORETURN
-#endif
-
-
 // errno is statically allocated, so does not need to be passed to these macro functions
 #define LOG_ERROR(file, format, ...) \
     do                                                              \
