@@ -40,8 +40,8 @@ get_long(char * str)
 }
 
 
-static void
-collect_info(char * loc, char * buf)
+static int
+copy_word(char * loc, char * buf)
 {
     char * marker = loc;
     int ctr = 0;
@@ -53,6 +53,9 @@ collect_info(char * loc, char * buf)
     // grab field value up to next whitespace
     while(!isspace(*marker))
     {
+        if (ctr >= BUF_SIZE)
+            return -1;
+
         buf[ctr] = *marker;
         ctr++;
         marker++;
@@ -60,6 +63,8 @@ collect_info(char * loc, char * buf)
     
     // null-terminate buffer
     buf[ctr] = '\0';
+
+    return 0;
 }
 
 static int
@@ -73,17 +78,19 @@ uid_match(char * buf, uid_t uid, struct pid_info * info)
         if (strncmp(loc, "Name:", 5) == 0)
         {
             loc += 5;
-            collect_info(loc, found_name);
+            if (copy_word(loc, found_name) == -1)
+                return -1;
         }
 
         // make local copy of process uid
         if (strncmp(loc, "Uid:", 4) == 0)
         {
             loc += 4;
-            collect_info(loc, found_uid);
+            if (copy_word(loc, found_uid) == -1)
+                return -1;
 
             // if UID matches user-supplied one, fill in struct
-            if (get_long(found_uid) == uid)
+            if (get_long(found_uid) == (long)uid)
             {
                 strcpy(info->pname, found_name);
                 return 0;
@@ -144,7 +151,7 @@ main(int argc, char * argv[])
             continue;
         }
 
-        // read file contents into buffer
+        // read file contents (up to 2500 bytes) into buffer
         num_read = read(fd, buffer, READ_LIM);
         if (num_read == -1)
         {
