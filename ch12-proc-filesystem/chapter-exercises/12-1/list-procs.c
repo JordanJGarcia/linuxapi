@@ -1,14 +1,9 @@
-#include <fcntl.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <ctype.h>
-#include <sys/stat.h>
+#include "../proc-utilities.h"
 #include "../../../lib/tlpi-hdr.h"
 #include "../../../lib/error.h"
 #include "../../../ch8-users-groups/chapter-examples/8-1/ugid-functions.h"
-
-#define BUF_SIZE 100
-#define READ_LIM 2500
+#include <fcntl.h>
+#include <sys/stat.h>
 
 struct pid_info {
     long pid;
@@ -18,91 +13,20 @@ struct pid_info {
     "N/A"
 };
 
-static long
-get_long(char * str)
-{
-    long res;
-    char * endptr;
-
-    if (str == NULL || *str == '\0')
-        return -1;
-
-    errno = 0;
-    res = strtol(str, &endptr, 0);
-
-    if (errno != 0)
-        return -1;
-
-    if (*endptr != '\0')
-        return -1;
-
-    return res;
-}
-
-
-static int
-copy_word(char * loc, char * buf)
-{
-    char * marker = loc;
-    int ctr = 0;
-
-    // skip any leading whitespace
-    while(isspace(*marker))
-        marker++;
-
-    // grab field value up to next whitespace
-    while(!isspace(*marker))
-    {
-        if (ctr >= BUF_SIZE)
-            return -1;
-
-        buf[ctr] = *marker;
-        ctr++;
-        marker++;
-    }
-    
-    // null-terminate buffer
-    buf[ctr] = '\0';
-
-    return 0;
-}
 
 static int
 uid_match(char * buf, uid_t uid, struct pid_info * info)
 {
-    char found_name[BUF_SIZE], found_uid[BUF_SIZE], * loc = buf;
-
-    while(*loc)
+    // if UID matches user-supplied one, fill in struct
+    if (get_long(get_status_field(buf, "Uid:")) == (long)uid)
     {
-        // make local copy of process program name
-        if (strncmp(loc, "Name:", 5) == 0)
-        {
-            loc += 5;
-            if (copy_word(loc, found_name) == -1)
-                return -1;
-        }
-
-        // make local copy of process uid
-        if (strncmp(loc, "Uid:", 4) == 0)
-        {
-            loc += 4;
-            if (copy_word(loc, found_uid) == -1)
-                return -1;
-
-            // if UID matches user-supplied one, fill in struct
-            if (get_long(found_uid) == (long)uid)
-            {
-                strcpy(info->pname, found_name);
-                return 0;
-            }
-
-            // otherwise, set struct data to "N/A"
-            strcpy(info->pname, "N/A");
-            return -1;
-        }
-
-        loc++;
+        strcpy(info->pname, get_status_field(buf, "Name:"));
+        return 0;
     }
+
+    // otherwise, empty struct
+    strcpy(info->pname, "");
+    info->pid = 0;
     return -1;
 }
 
