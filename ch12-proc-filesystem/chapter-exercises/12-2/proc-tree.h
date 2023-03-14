@@ -30,7 +30,6 @@ void print_tree(struct process * node);
 int add_process(const pid_t parent, const pid_t pid, char * name);
 struct process * find_process(const pid_t pid);
 int load_procs(void);
-int get_parent_pid(char * buf);
-char * get_proc_name(char * buf);
+char * get_status_field(char * buf, char * field_name);
 
 #endif

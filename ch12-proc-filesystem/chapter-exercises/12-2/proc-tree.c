@@ -65,7 +65,6 @@ copy_word(char * loc, char * buf)
     return 0;
 }
 
-
 // MAIN
 int
 main(int argc, char * argv[])
@@ -235,14 +234,14 @@ load_procs(void)
         buffer[num_read - 1] = '\0';
 
         // get parent pid
-        ppid = get_parent_pid(buffer);
+        ppid = (pid_t)get_long(get_status_field(buffer, "PPid:"));
         if (ppid == -1)
             return -1;
         else if (ppid == 2)
             continue;
 
         // get process name
-        name = get_proc_name(buffer);
+        name = get_status_field(buffer, "Name:");
         if (name == NULL)
             continue;
 
@@ -260,46 +259,25 @@ load_procs(void)
     return 0;
 }
 
-pid_t
-get_parent_pid(char * buf)
-{
-    char found_ppid[BUF_SIZE], * loc = buf;
-
-    while(*loc)
-    {
-        // make local copy of process parent id
-        if (strncmp(loc, "PPid:", 5) == 0)
-        {
-            loc += 5;
-            if (copy_word(loc, found_ppid) == -1)
-                return -1;
-
-            return (pid_t)get_long(found_ppid); 
-        }
-        loc++;
-    }
-    return -1;
-}
-
 char *
-get_proc_name(char * buf)
+get_status_field(char * buf, char * field_name)
 {
-    static char found_name[BUF_SIZE];
+    static char found[BUF_SIZE];
     char * loc = buf;
+    int field_size = strlen(field_name);
 
     while(*loc)
     {
         // make local copy of process parent id
-        if (strncmp(loc, "Name:", 5) == 0)
+        if (strncmp(loc, field_name, field_size) == 0)
         {
-            loc += 5;
-            if (copy_word(loc, found_name) == -1)
+            loc += field_size;
+            if (copy_word(loc, found) == -1)
                 return NULL;
 
-            return found_name;
+            return found;
         }
         loc++;
     }
     return NULL;
 }
-
