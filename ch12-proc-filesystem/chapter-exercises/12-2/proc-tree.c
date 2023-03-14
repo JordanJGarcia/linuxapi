@@ -6,6 +6,7 @@ int num_procs = 0;
 // an array to hold the processes in the tree
 // for simple searching
 // this is actually a makeshift hash table
+// made static so it is zero-initialized
 static struct process * procs[MAX_PROCS];
 
 // func prototypes
@@ -17,54 +18,6 @@ print_tabs(int n)
         printf("\t");
 }
 
-static long
-get_long(char * str)
-{
-    long res;
-    char * endptr;
-
-    if (str == NULL || *str == '\0')
-        return -1;
-
-    errno = 0;
-    res = strtol(str, &endptr, 0);
-
-    if (errno != 0)
-        return -1;
-
-    if (*endptr != '\0')
-        return -1;
-
-    return res;
-}
-
-static int
-copy_word(char * loc, char * buf)
-{
-    char * marker = loc;
-    int ctr = 0;
-
-    // skip any leading whitespace
-    while(isspace(*marker))
-        marker++;
-
-    // grab field value up to next whitespace
-    while(!isspace(*marker))
-    {
-        if (ctr >= BUF_SIZE)
-            return -1;
-
-        buf[ctr] = *marker;
-        ctr++;
-        marker++;
-    }
-
-    // null-terminate buffer
-    buf[ctr] = '\0';
-
-    return 0;
-}
-
 // MAIN
 int
 main(int argc, char * argv[])
@@ -72,10 +25,7 @@ main(int argc, char * argv[])
     if (load_procs() == -1)
         exit(EXIT_FAILURE);
 
-    printf("Tree loaded...\n\n");
-
     print_tree(head);
-
     exit(EXIT_SUCCESS);
 }
 
@@ -87,8 +37,8 @@ print_tree(struct process * node)
     
     while(current)
     {
-        print_tabs(current->level);
         printf("[%ld] %s\n", (long)current->pid, current->name);
+        print_tabs(current->level);
         print_tree(current->child);
         current = current->next;
     }
@@ -105,17 +55,18 @@ add_process(const pid_t parent, const pid_t pid, char * name)
             return -1;
 
         init->pid = pid;
+        strcpy(init->name, name);
         init->num_children = 0;
         init->level = 1;
         init->parent = NULL;
         init->previous = NULL;
         init->next = NULL;
         init->child = NULL;
-        strcpy(init->name, name);
 
         head = init;
         procs[pid] = head;
         num_procs++;
+
         return 0;
     }
 
@@ -152,13 +103,13 @@ add_process(const pid_t parent, const pid_t pid, char * name)
 
     // shuffle pointers around
     new->pid = pid;
+    strcpy(new->name, name);
     new->num_children = 0;
     new->parent = found;
     new->previous = previous;
     new->next = current;
     new->child = NULL;
     new->level = found->level + 1;
-    strcpy(new->name, name);
 
     if (previous)
         previous->next = new;
@@ -173,6 +124,7 @@ add_process(const pid_t parent, const pid_t pid, char * name)
 
     procs[pid] = new;
     num_procs++;
+
     return 0;
 }
 
@@ -194,8 +146,7 @@ load_procs(void)
     struct dirent * proc_dirent;
 
     // open /proc/ dir
-    proc_dir = opendir("/proc/");
-    if (proc_dir == NULL)
+    if ((proc_dir = opendir("/proc/")) == NULL)
     {
         LOG_ERROR(stderr, "Could not open /proc/ dir");
         return -1;
@@ -208,6 +159,7 @@ load_procs(void)
         // if conversion doesn't work, its not a PID
         // so continue past it
         pid = get_long(proc_dirent->d_name);
+        // 2 seems to be an idle process with no parent
         if (pid == -1 || pid == 2)
             continue;
 
@@ -257,27 +209,4 @@ load_procs(void)
             return -1;
     }
     return 0;
-}
-
-char *
-get_status_field(char * buf, char * field_name)
-{
-    static char found[BUF_SIZE];
-    char * loc = buf;
-    int field_size = strlen(field_name);
-
-    while(*loc)
-    {
-        // make local copy of process parent id
-        if (strncmp(loc, field_name, field_size) == 0)
-        {
-            loc += field_size;
-            if (copy_word(loc, found) == -1)
-                return NULL;
-
-            return found;
-        }
-        loc++;
-    }
-    return NULL;
 }

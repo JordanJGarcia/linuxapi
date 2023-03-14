@@ -1,12 +1,10 @@
 #ifndef PROC_TREE_H
 #define PROC_TREE_H
 
-#include <sys/types.h>
-#include <ctype.h>
-#include <dirent.h>
-#include <fcntl.h>
+#include "../proc-utilities.h"
 #include "../../../lib/tlpi-hdr.h"
 #include "../../../lib/error.h"
+#include <fcntl.h>
 
 #define MAX_CHILDREN 1000
 #define MAX_PROCS 1000000
