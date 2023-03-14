@@ -9,7 +9,7 @@ int num_procs = 0;
 // made static so it is zero-initialized
 static struct process * procs[MAX_PROCS];
 
-// func prototypes
+// static functions
 static void
 print_tabs(int n)
 {
@@ -32,7 +32,6 @@ main(int argc, char * argv[])
 void
 print_tree(struct process * node)
 {
-    // start at first child
     struct process * current = node;
     
     while(current)
@@ -64,8 +63,10 @@ add_process(const pid_t parent, const pid_t pid, char * name)
         init->child = NULL;
 
         head = init;
-        procs[pid] = head;
         num_procs++;
+        
+        // index node
+        procs[pid] = head;
 
         return 0;
     }
@@ -121,9 +122,10 @@ add_process(const pid_t parent, const pid_t pid, char * name)
         found->child = new;
 
     found->num_children++;
-
-    procs[pid] = new;
     num_procs++;
+
+    // index node
+    procs[pid] = new;
 
     return 0;
 }
