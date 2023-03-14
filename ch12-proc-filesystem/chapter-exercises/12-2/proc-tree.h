@@ -17,10 +17,10 @@ struct process {
     char name[BUF_SIZE];
     int num_children;
     int level;
-    struct process * parent;
-    struct process * previous;
-    struct process * next;
-    struct process * child;
+    struct process * parent;    // up
+    struct process * child;     // down
+    struct process * previous;  // left
+    struct process * next;      // right
 };
 
 // prototypes
