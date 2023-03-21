@@ -1,0 +1,12 @@
+This chapter was pretty straight forward
+
+It discussed I/O buffering in both the user space and by
+the kernel.
+
+The stdio library already buffers the user-space data for the kernel
+to improve performance, and messing with the kernel buffer abilities
+can severely degrade performance, especially in smaller size byte transfers.
+
+Regardless, you can modify the kernel buffering mechanism to sync
+data to the disk, or to sync data and file metadata to the disk on
+each read/write.
