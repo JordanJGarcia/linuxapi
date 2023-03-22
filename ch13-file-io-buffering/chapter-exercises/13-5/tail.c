@@ -61,7 +61,10 @@ display_lines(int fd, int n)
     }
 
     for(i = n - 1; i >=0; i--)
+    {
         write(STDOUT_FILENO, lines[i], strlen(lines[i])); 
+        free(lines[i]);
+    }
 }
 
 int
